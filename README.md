@@ -31,8 +31,7 @@
 ## ⚙️ Installation & Setup
 ### 🔹 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/CDP_Chatbot.git
-cd CDP_Chatbot
+git clone https://github.com/onslaught7/Chat_Bot.git
 ```
 
 ### 🔹 2️⃣ Set Up the Backend
