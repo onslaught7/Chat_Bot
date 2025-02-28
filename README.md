@@ -12,7 +12,6 @@
 - [💻 Frontend Usage](#-frontend-usage)
 - [🛠 How It Works](#-how-it-works)
 - [🎯 Future Improvements](#-future-improvements)
-- [📜 License](#-license)
 
 ---
 
