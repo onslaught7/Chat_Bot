@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+selenium
+beautifulsoup4
+requests
+webdriver-manager
+spacy
+fuzzywuzzy
+python-Levenshtein
+spacy[transformers]
