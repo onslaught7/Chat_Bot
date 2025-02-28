@@ -1,0 +1,1615 @@
+How to Guides Index
+Segment’s How-to Guides provide an in-depth walk through and examples of the many things you can do to implement, automate, engage with, and begin analyzing your data. We’ve also got a series of Quickstart Guides for each of our Source libraries.
+
+Implementation
+What are best practices for identifying users?
+Should I collect data on the client or server?
+How do I collect page views on the server side?
+How do I import historical data?
+How do I join user profiles?
+How do I migrate code from other analytics tools?
+Engagement and Automation
+What role does Segment play in Attribution?
+How do I automate multi-channel re-engagement campaigns?
+How do I create a push notification?
+How do we track customers across channels and devices?
+How do I set up a dynamic coupon program to reward loyal customers?
+How do we set up event-triggered notifications or alerts?
+Analytics
+How do I forecast Long Term Value with SQL and Excel for e-commerce?
+How do I measure my advertising funnel?
+How do I measure the ROI of my Marketing Campaigns?
+Quickstart Guides
+Analytics.js (Javascript) Quickstart Guide
+.NET Quickstart Guide
+Go Library Quickstart Guide
+Python Library Quickstart Guide
+Java Library Quickstart Guide
+PHP Library Quickstart Guide
+Node.js Library Quickstart Guide
+Ruby Library Quickstart Guide
+iOS Quickstart Guide
+Android Quickstart Guide
+
+Automating Multi-Channel Re-Engagement Campaigns
+Compelling and engaging brands delight their customers at every interaction. As customers move seamlessly across channels—such as email, push notifications, display ads—brands must similarly meet them with tailored and consistent messages.
+
+With Segment, you can craft a tailored message while using a combination of AdRoll, Customer.IO, and other tools to dynamically switch between channels.
+
+Talk to a product specialist today about using data to tailor your brand experience.
+
+Tools used
+Retargeting with AdRoll: AdRoll is a retargeting and prospecting tool that allows you to show display ads to a behaviorally-defined cohort
+
+Push notifications with Braze: Braze is a multi-channel marketing campaign focused on the mobile experience
+
+Emails with Customer.io: Customer.io is a flexible email provider that allows you to create cohorts based on customer actions. You can build complex onboarding emails, nurture email campaigns, as well as marketing automation workflows.
+
+There are other email tools on Segment’s platform, such as Bronto, SendGrid, and Mailchimp. Check out the full list of email tools.
+
+It’s important to register for these tools and enable them on your Segment source project. When Segment collects tracking data, it’ll also route it to all of your enabled tools. Then your tools, especially ones like Customer.io, Braze, and AdRoll, where you can define cohorts of your users, will be working off a dynamic, yet consistent data set. This is paramount in getting the dynamic messaging to update accordingly.
+
+Set it up
+Diagram showing tracking data moving from your source, to Segment, and then to Braze, customer.io, and AdRoll.
+
+When you send tracking data from your app or website to Segment, Segment will send the same data to all of your tools. Segment also collects key messaging events like Push Notification Opened and Email Opened from Braze and Customer.io, respectively, and sends that to other tools. By defining cohorts based on these events, you can create dynamic campaign audiences, to which customers can add and remove themselves.
+
+In each of your destinations—Braze, Facebook, Customer.io, AdRoll—you can create custom campaigns to show display ads or send emails to a specific segment of users who have performed (or not performed) a given action, or “event.” In this cross-channel re-engagement example, we’ll start with push notifications.
+
+1st line of defense: the push notification
+In Braze, create a segment of customers who added a product to their cart, but did not check out. The segment definition, in this case, should be people who have performed Product Added, but have not performed Order Completed . Send a push notification to these customers with a message that the cart was abandoned and that they can complete the transaction with, for example, a 10% coupon.
+
+An Apple iPhone with a push notification from Toastmates that says Oh no! You left something in your basket.
+
+2nd line of defense: the email reminder
+Because Segment automatically collects second-party data from Braze, you now also have push notification event data, like Push Notification Opened and Push Notification Received in Segment. You can use the properties on each of these events to define a property called campaign_name so you can tie these activities to a given campaign.
+
+Screenshot of an email from Toastmates reminding the customer that they have a toast in their cart and giving them a coupon and a direct link to their cart.
+
+This is helpful because now, you can define segments in Customer.io for customers who have triggered Push Notification Received, but not Push Notification Opened . You’ve now automated the process of targeting customers who don’t open your push notifications. In Customer.io, you can create a campaign that sends an email to those people asking them to check their push notifications and offering them a coupon to complete their order.
+
+3rd line of defense: paid advertising
+Since Segment collects email event data, like Email Opened, from Customer.io, you can similarly create segments in Facebook Ads and AdRoll for when customers don’t open your email. Create a segment where users have an Email Delivered event, but no Email Opened event. When users meet these criteria, they’ll get automatically added to your retargeting campaigns. You can then serve them custom creatives about them neglecting to open your emails and, again, perhaps offer them a coupon to complete the transaction.
+
+An ad for Toastmates with a frowning face on a piece of toast and a link for a coupon.
+
+When users do not open an activation email, add them to a specific retargeting campaign that contains messaging to remind them to activate.
+
+With Segment, automate not just switching across channels, but also the messaging in each channel so that the entire experience is cohesive. The added benefit is that we can create specifically targeted retargeting campaigns for people who no longer open our emails or push notifications. Automating these processes with Segment makes channel-switching more seamless for your customers.
+
+Create an engaging and consistent brand experience
+This is just a simple cart abandonment example that dynamically follows customers as they switch between channels. Because Segment collects and routes the second party data of emails and push notifications being opened, you can create specific campaigns with messaging that targets your customers as they interact with your brand.
+
+With over 200+ different tools on Segment’s platform, you can take this idea and create other tailored shopping experiences to re-engage your customers.
+
+Talk to a product specialist today about using data to tailor your brand experience.
+
+Collecting Data on the Client or Server
+One of the most common questions Segment receives is: “Should I use one of your client-side libraries or one of your server-side libraries?”
+
+This is such an important topic that you’ll find an in-depth article in Segment’s Analytics Academy:  When to Track on the Client vs Server. It’s worth a read. Below, you can also read some quick logic around why you may want to choose either option.
+
+Client-side
+Not stored in your database
+Good things to send from the client-side are things that you wouldn’t usually store in your database. Things like page views, button clicks, page scroll length, mouse movements, social shares, and likes.
+
+Easier to send client-side
+Things like UTM tags, operating system, device type, or cookied data like returning visitors are all easiest to track client-side. Of course, some things like mouse movements are only available on the client-side so you should definitely track that there.
+
+Events needed for client-side only destinations
+Some destinations can only accept data when the event is sent from the browser. They require events on the client since they rely on cookies and most of those tools do not have an API that Segment can send server-side data to. More on this in Segment’s Analytics.js docs.
+
+Server-side
+Payment events
+Charging customers often happens when they aren’t online, and accuracy for payments is so important. Server-side tracking tends to be more accurate than user devices since it’s a more controlled environment.
+
+Accuracy
+In general client-side data is fine for watching general trending, but it’s never going to be perfect. Especially if your customers are likely to use things like adblock or old/non-standard browsers.
+
+For example, if you’re sending triggered emails based on events, it’s probably a good idea to make sure your user profiles are sent through Segment’s servers so no one gets left out or mis-emailed.
+
+Calculated from your database
+Another good type of data to send server-side are things that need to be calculated from a database query. This might be something like “Friend Count” if your site or app is a social network.
+
+Sensitive information
+Sensitive information is also best kept out of browsers. Any data you don’t want exposed to users should be sent server-side.
+
+Selecting Destinations
+Each Segment library allows an integrations object either as a top level object or nested in options object. 
+
+This flag may be especially useful in Legacy source types, where an event might be triggered on both the client and server for various reasons. The following will cause the payload to be sent to all enabled tools except Facebook Pixel:
+
+    analytics.identify('user_123', {
+      email: 'jane.kim@example.com',
+      name: 'Jane Kim'
+      }, {
+        integrations: {
+          'Facebook Pixel': false
+        }
+      });
+
+Collecting Pageviews on the Server Side
+Segment believes that client-side collection is appropriate for collection of basic pageviews.
+
+If you’d like to track page calls from your server to Segment, Segment recommends doing it in addition to any client side tracking you’re doing with analytics.js, and doing it in a separate “source” so that you can configure where to send the (probably redundant, albeit higher-fidelity) data.
+
+With this approach, you might use a request “middleware” to log a pageview with every page load from your server.
+
+There are a few things to be mindful of if you want to make sure you can attribute these (anonymous) page views to the appropriate user in your client-side source (eg, for effectively joining these tables together to do down-funnel behavioral attribution). You’ll want to ensure they share an anonymousId by respecting one if it’s already there, and setting it yourself if not. To do that, you can read and modify the ajs_anonymous_id cookie value in the request.
+
+Be sure to pass through as many fields as you can in Segment’s Page and Common spec, so that you get full functionality in any downstream tools you choose to enable. Segment recommends specifically ensuring you pass the url, path, host, title, search, and referrer in the message properties and ip and user-agent in the message context .
+
+Here’s an example of an express middleware function that covers all those edge cases:
+
+If you have any questions or would like help generally adopting this method for other languages and frameworks, be sure to get in touch.
+
+import express from 'express'
+import Analytics from 'analytics-node'
+import { stringify } from 'qs'
+
+const app = express()
+const analytics = new Analytics('write-key')
+
+app.use((req, res, next) => {
+  const { search, cookies, url, path, ip, host } = req
+
+  // populate campaign object with any utm params
+  const campaign = {}
+  if (search.utm_content) campaign.content = search.utm_content
+  if (search.utm_campaign) campaign.name = search.utm_campaign
+  if (search.utm_medium) campaign.medium = search.utm_medium
+  if (search.utm_source) campaign.source = search.utm_source
+  if (search.utm_term) campaign.keyword = search.utm_term
+
+  // grab userId if present
+  let userId = null
+  if (cookies.ajs_user_id) userId = cookies.ajs_user_id
+
+  // if no anonymousId, send a randomly generated one
+  // otherwise grab existing to include in call to segment
+  let anonymousId
+  if (cookies.ajs_anonymous_id) {
+    anonymousId = cookies.ajs_anonymous_id
+  } else {
+    anonymousId = = uuid.v4()
+    res.cookie('ajs_anonymous_id', anonymousId )
+  }
+
+  const referrer = req.get('Referrer')
+  const userAgent = req.get('User-Agent')
+
+  const properties = {
+    search: stringify(query)
+    referrer,
+    path,
+    host,
+    url
+    /* ++ any custom props (eg. title) */
+  }
+
+  const context = {
+    campaign,
+    userAgent,
+    ip
+  }
+
+  // send a call to segment
+  analytics.page(
+    anonymousId, // either random (matching cookie) or from client
+    userId, // might be null
+    properties,
+    context
+  )
+
+  // proceed!
+  next()
+})
+
+Creating a Push Notification
+Like emails, push notifications are an extremely powerful way to re-engage customers on mobile apps. Push notifications are personal, so targeting them precisely using customer behavioral data (from Segment) is crucial.
+
+For example, Wanelo accepts direct product feeds from retailers. For any of these retailers, when a product goes on sale, they can send a push notification to the people who have saved that product in their profile.
+
+Push messaging focuses around three key features:
+
+Content: Diversify your messaging just as you would with an investment portfolio. you want to target your consumers with right content and avoid opt out for push. For example, Netflix uses push notifications to let users know when their favorite shows are available. Rather than sending every user a notification every time any new show or season is released.
+
+Frequency: Consider your App Store Category. News/Sports apps send push notifications daily or multiple times a day if it’s “game day”. So do Social Networking/Messaging apps. However, apps that are utilitarian, for example, food and drink, health and fitness, or productivity only message when necessary.
+
+Timing: Always send push notifications to users in their local timezone. In general, mobile usage peaks between 6pm - 10pm.
+
+Choose a destination
+Self evaluate when trying to choose a destination that suits your needs.
+
+What’s your user base size? Is it more than 10k? If not, you can try demo versions of mobile marketing automation libraries.
+Are you looking for a tool only to support push notification or provide an entire marketing suite?
+How do push notifications create an impact in your app (engagement, retargeting, or social impact)?
+How can deep links in push notifications fit into your app needs?
+You will find many alternatives, but choosing the right one for your app is important!
+
+Key metrics for a successful push
+Build trust with your user
+Ask users to opt in to push notifications upon app install or after the first time they use an app, so it’s easier to be transparent about how users can opt out later.
+
+Give users control
+Let your customers decide what notifications they want to receive. It may help to break up your notifications into categories so you can empower your customers with this decision.
+
+Create user segments
+Creating lists of your app users based on characteristics or events that align to specific campaigns will help you better target your mobile marketing efforts.
+
+Personalize messages
+Make sure to use deep linking to guide users to the specific screen relevant to that offer.
+
+Control timing
+Pay attention to user time zones and customize messages based on time of year (holidays) to make brand personable.
+
+Right frequency
+The ideal frequency depends on the type of app you have.
+
+A/B test push messages
+Test different action words, phrases, message lengths, and more.
+
+Marketing automation
+To “auto-enroll” new users into existing campaigns.
+
+Measure the right metrics
+Don’t silo the success of your campaign to just app opens.
+Tracking Customers Across Channels and Devices
+The paths consumers take to your app or website are more complex than ever, often involving a variety of online communities and multiple devices. Your next repeat customer might stumble across your display ad on a newsletter you’ve never heard about, or receive a recommendation from a co-worker in a Slack channel.
+
+But these off-domain and cross-device brand interactions are equally, if not more, important to track and understand. With this data, you can identify more sources of qualified traffic and determine the best shopping experiences for conversion.
+
+In this guide, you’ll learn where and how to track these critical events so that you can understand your customer’s journey before they even get to your storefront, as well as their preferred shopping experiences.
+
+If you’re interested in learning about what to track, check out Segment’s guide on creating an e-commerce tracking plan.
+
+Talk to a product specialist today about building a clean, high-quality data spec so you can focus on brand engagement and sales growth.
+
+Where are they coming from? Off-domain tracking
+Digital marketing consists of owned marketing, earned marketing, and paid marketing.
+
+Type of marketing	How to track
+Owned (domain, app)	First-party data sources (on-page or in-app analytics)
+Owned (email, push notifications)	Second-party data sources
+Earned (blogs, PR, partners, news)	UTM params, deep links on mobile
+Paid aquisition	UTM params, deep links on mobile
+Owned marketing encompasses all activities you have full control over. It can be further split into first- and second-party data. First-party data is customer data generated on your site or in your app. Second-party data is customer data generated when your customers interact with your email or push notifications (for example, “Email Opened” or “Push Notification Received”).
+
+Earned marketing is when publications, newsletters, or blogs organically create some content that refers to, or promotes you.
+
+Paid acquisition, like display ads or embedded advertorials, don’t exist on your domain. To track the inbound traffic from both “earned” and paid acquisition sources, Segment uses UTM parameters (and deep links if you’re directing a customer to a specific screen in your mobile app that has the product to purchase).
+
+Track engagement on your email channels
+
+While these are still under “owned” marketing, they happen off your domain. An example is sending an engagement email to your customer base with a call-to-action to visit your store. If you’re using Segment and an email or push notification tool on Segment’s platform, you can easily collect second-party data such as “Email Sent” and “Push Notification Opened”.
+
+Learn more about which email and push notification tools Segment supports.
+
+Here are some of the most commonly used and popular events tracked through email and push notifications on Segment:
+
+Email Delivered
+
+Email Opened
+
+Push Notification Received
+
+Push Notification Opened
+
+Deep Link Clicked
+
+If your email tool is not supported on Segment, you can still track email opens with Segment’s tracking pixel. This pixel functions like an advertising pixel in that it embeds an image onto pages where JavaScript and POST requests are disabled.
+
+View a list of tools Segment supports.
+
+In your email template HTML, include an image tag where the src is a URL that is carefully constructed to hit Segment’s appropriate endpoint with a JSON payload that is base64 encoded.
+
+An example of the payload that will be sent to Segment upon an email open is:
+
+{
+  "writeKey": "YOUR_WRITE_KEY",
+  "userId": "025waflo3d65",
+  "event": "Email Opened",
+  "properties": {
+    "subject": "Try Our New $10 Toast",
+    "email": "andy@segment.com"
+  }
+}
+Then, you would base64 encode that and append it to the Segment endpoint:
+
+https://api.segment.io/v1/pixel/track?data=<base64-ENCODED-JSON>
+Add the complete URL as the src in the image tag.
+
+<img src="https://api.segment.io/v1/pixel/track?data=eyJ3cml0ZUtleSI6ICJZT1VSX1dSSVRFX0tFWSIsICJ1c2VySWQiOiAiMDI1cGlrYWNodTAyNSIsICJldmVudCI6ICJFbWFpbCBPcGVuZWQiLCAicHJvcGVydGllcyI6IHsgICAic3ViamVjdCI6ICJUaGUgRWxlY3RyaWMgRGFpbHkiLCAgICJlbWFpbCI6ICJwZWVrQXRNZUBlbWFpbC5wb2tlIiB9fQ">
+Learn more about Segment’s Pixel API.
+
+Track earned traffic with UTM Parameters
+
+UTM parameters are types of query strings added to the end of a URL. When clicked, they let the domain owners track where incoming traffic is coming from and understand what aspects of their marketing campaigns are driving traffic.
+
+Diagram showing how different UTM parameters redirect to your site and then are displayed in Traffic analytics.
+
+UTM parameters are only used when linking to your site from outside of your domain. When a visitor arrives to your site using a link containing UTM parameters, Segment’s client-side analytics.js library will automatically parse the URL’s query strings, and store them within the context object as outlined in the Spec: Common docs. These parameters do not persist to subsequent calls unless you pass them explicitly.
+
+UTM parameters contain three essential components:
+
+utm_campaign: This is the name of your campaign. All marketing activities that support this campaign, needs to have the same utm_campaign so that downstream analysis to measure performance for this specific campaign can be done off this primary key. (Example: “national-toastday”)
+
+utm_medium: How the traffic is coming to your site. Is it through email, a display ad, or an online forum? This ensures Segment’s downstream analysis can easily see which channel performs the best. (Examples: “email”, “paid-display”, “paid-social”, “organic-social”)
+
+utm_source: Where the traffic is specifically coming from. You can be specific here. This ensures Segment’s downstream analysis can measure which specific source brings the most conversions. (Examples: “twitter”, “customer.io” (email tool), “facebook”, “adroll”)
+
+With these being optional:
+
+utm_content: For multiple calls to action on a single page, utm_content indicates which one. For example, on a website, there may be three different display ads. While the link on each display ad will have the same utm_campaign, utm_medium, and utm_source, the utm_content will be different. (Examples: “banner”, “left-side”, “bottom-side”)
+
+utm_term: This is the parameter suggested for paid search to identify keywords for your ad. If you’re using Google Adwords and have enabled “autotagging”, then you don’t need to worry about this. Otherwise, you can manually pass the keywords from your search terms through this parameter so that you can see which keywords convert the most. Note that this parameter is reserved explicitly for search. (Examples: “toast”, “butter”, “jam”)
+
+If you’d like UTM parameters to persist in subsequent calls, you’ll need to manually add those fields in the context.campaign object of your event call. For example:
+
+analytics.page("97980cfea0067", {}, {  campaign: {
+   name: "TPS Innovation Newsletter",
+   source: "Newsletter",
+   medium: "email",
+   term: "tps reports",
+   content: "image link"
+  },
+});
+You can also store the values in cookies and/or localStorage and use Analytics.js Middleware to enrich the payload for subsequent calls.
+
+Learn more about the semantics with each UTM parameter. The key isn’t to stick with the definitions that closely, but to be consistent within your own analytics system.
+
+Proper UTMs use
+
+A marketing campaign is a single marketing message across several platforms, media, and channels, with a consistent and clear call-to-action.
+
+Since the marketing campaign is from off-domain to your storefront (on your property or domain), then it’s critical to use the proper and consistent UTM params across all of your channels:
+
+Emails
+
+Paid acquisition
+
+Guest blog post in partner’s newsletter
+
+Article in the news
+
+Offline events / in real life / meat space
+
+Your UTM parameters would match a pattern such as:
+
+Having the same utm_campaign across all channels
+
+Different utm_source and utm_medium depending on the channel
+
+If you were on paid acquisition, the placement of the display ad would determine what goes in utm_content
+
+If you were using paid search, the term would be utm_term
+
+An example would be a National Toast Day campaign. This campaign would include emails, paid acquisition (with AdRoll and Facebook Ads), organic social (Twitter), and promotional content on partners’ blogs.
+
+Channel	UTM Campaign	UTM Medium	UTM source
+Email	national-toastday	email	customer.io
+News	national-toastday	news	toastnation
+AdRoll	national-toastday	display	adroll
+Facebook	national-toastday	paid-social	facebook
+Twitter	national-toastday	organic-social	twitter
+Having the consistent UTM parameters naming convention simplifies the downstream analysis and the ease of querying across dimensions, such as within the campaign, which medium or source was the best. Or which placement of the display ad led to the most conversions.
+
+Learn more about measuring ROI of marketing campaigns with SQL and UTM parameters.
+
+What device are they using? Cross-device tracking
+It’s common for customers to discover you on their desktop before making the purchase much later on their phone. How do you tie all of these events back to the same customer so you can understand which marketing activities on what screens are responsible for conversions?
+
+Track server-side when possible
+
+Tracking with JavaScript in the browser has its benefits, such as using browser technologies to automatically track things like UTM parameters, referring domain, IP address, and user agent. But here are a few reasons why it might make sense for your store to track on the server side.
+
+Are your customers technically savvy and use ad blockers? Ad blockers restrict requests from a list of blocklisted domains to your browser, which means that none of your event tracking will work properly. If you sell to a technical audience, it is possible that you may be underreporting your analytics by a material amount.
+
+Do you have multiple devices? If you have multiple devices with the same customer check out flow, moving those events to the server-side will reduce your surface area of your code base. This means less maintenance and faster changes.
+
+Learn more about client vs server tracking.
+
+If you do move key checkout events to the server side, you will have to manually send the data automatically collected by Segment’s client-side JavaScript library to your server. These pieces of tracking data are still important for the following reasons:
+
+UTM parameters: Collecting the UTM params will allow you to tie conversion events to your marketing campaign or activities. This is valuable in that you can immediately measure performance and calculate ROI on your campaigns.
+
+IP address: The IP address can provide location intelligence for your customers. This means you can personalize your shopping experience or engagement emails with inventory that might be more relevant depending on your customers’ locations.
+
+User Agent: The User Agent will inform you of your customers’ preferred device and shopping experience. Are they converting on a mobile web browser? Native app? Or on their laptop?
+
+Learn how to usecontext to manually send this information on the server side.
+
+Track the same user across devices
+
+If your store allows user registration and users are logged in when they shop on your site or app, then you can track them across devices.
+
+This works by using a userId instead of an anonymousId to track key events and where they occur. This userId serves as the primary key in your downstream tools and data warehouse, allowing you to join all of a profile’s anonymous activities with logged in activities. You also can get a complete picture of a profiles location, and what device they are on while using your app or website.
+
+Learn more about pulling the entire user journey for a single user given a userId.
+
+Unfortunately, tracking the same user across devices only works if they log in to each device. Anonymous browsing in each distinct “experience” (for example, mobile safari, native iPhone, browser on laptop) generates its own unique anonymousId . Each anonymousId is limited to the scope of that browser or app, only measuring activities in those sessions. It’s not until the user logs in when the userId is generated (if registering for a new account) or the userId is retrieved from your database, and then mapped to the anonymousId of that session. Segment keeps a table of anonymousIds mapped to a single userId so you can analyze a user’s activity across multiple devices.
+
+If a user logs in on multiple devices, then you would be able to analyze even the anonymous activity across those devices. Consequently, it’s important to encourage your users to log in so that you have this capability.
+
+Attribute offline conversions to online impressions
+One of the biggest challenges for brick-and-mortar stores is to measure the impact of their online advertising campaigns on their in-store purchases. Attributing offline conversions has traditionally been difficult to achieve, due to the lack of offline data and robust infrastructure to route that data.
+
+For Facebook advertisers, Facebook Offline Conversions allow you to tie offline conversions to your campaigns. It’s important to note that the offline data is labeled to an event set that has been assigned to a Facebook campaign. Here are the two ways to attribute offline conversions to Facebook advertisements:
+
+Uploading offline event data about actions that aren’t captured with Facebook Pixel or App Events to Facebook for them to match actions to your Facebook ads
+
+Enable and configure Segment’s Facebook Offline Conversions destination, which automates attributing offline events to your Facebook ads in real-time
+
+Learn more about the benefits of Segment’s Facebook Offline Conversions destination.
+
+Most other advertising networks provide some functionality of manually uploading offline data to match with their online advertising data. Here is a short list of other services:
+
+Google Adwords provides the functionality to attribute offline conversions to your ads.
+Attributing in-store purchases to an impression from a display ad online is critical to help marketers and advertisers understand which campaigns or creatives are driving sales. The more real-time the data and insights, the more nimble your business can be in altering course so that additional resources can be put towards the right marketing actions.
+
+Learn about the funnel before your website or app
+The internet has made it easy for customers to come from nearly anywhere to your digital storefront. But there are ways to track and collect data to better understand these complicated paths so you can be intentional with your marketing efforts to tap into these communities.
+
+By tracking in these locations with the above mentioned techniques, your downstream analysis will also be simpler. With UTM params, you’ll be able to quickly measure the performance of a campaign or a particular channel. By properly tracking on multiple devices, you can understand which shopping experiences are most preferred. These tracking techniques are invaluable to understanding the source of your highest quality customers.
+
+Talk to a product specialist today about building a clean, high-quality data spec so you can focus on brand engagement and sales growth.
+
+Setting Up a Dynamic Coupon Program to Reward Loyal Customers
+One component of building a successful and engaging e-commerce brand is rewarding your most loyal customers. With Segment Warehouses and SQL, you can retrieve a table of your most valuable customers, then reward them.
+
+This guide will walk you through setting up a dynamic and automated coupon program based on conditions that define your most valuable customers, as well as how to measure the program’s performance.
+
+Talk to a product specialist today about using data to tailor your brand experience.
+
+Tools used
+Emails with Customer.io: Customer.io is a flexible email provider that allows you to create cohorts based on customer actions. You can build complex onboarding emails, nurture email campaigns, as well as marketing automation workflows.
+
+Retention Analytics with Amplitude: Amplitude is an analytics tool that focuses on understanding retention and funnel analysis.
+
+It’s important to register for these tools and enable them on your Segment source project. When Segment collects tracking data, it routes it to all of your enabled tools, meaning that they get a single consistent data set. Most importantly, the data generated by users interacting with emails is sent through Segment so you can analyze email performance, and how it impacts conversion with Amplitude.
+
+Not using Customer.io or Amplitude? Check out the other Segment Supported Email Marketing and Analytics tools.
+
+The Loyalty Program
+Say, as the marketing manager of our fictitious, on-demand artisanal toast company, Toastmates, you want to experiment with a coupon program to retain your best customers.
+
+Through a combination of SQL and statistical analysis on a set of historical data, you’ve identified the conditions for our most valuable customers as:
+
+shops over twice a month
+pays over $20 per order
+Learn how to define these conditions in How to Forecast LTV for e-commerce with Excel and SQL.
+
+Will rewarding a $5 coupon to this cohort after they make the second purchase a month lead to higher engagement and LTV? Set up this program using Customer.io as the email provider and measure it’s performance on engagement and LTV with Amplitude.
+
+Conduct a split test (half of the cohort will represent the control group and will not receive any emails; the other half will receive an email with the $5 coupon) for one month. After which, use Amplitude to see if there were any correlations between the coupon email and conversions.
+
+Set it up
+First, register for an account with Customer.io and Amplitude. Then, enable Customer.io and enable Amplitude on your Segment project. Finally, go into your Customer.io account and enable “sending data to Segment”:
+
+Screenshot of the Streaming Data Out page in Customer.io, with an enabled Segment.com option.
+
+You can find those destination settings in Customer.io here.
+
+When everything is enabled, customer event data such as Order Completed and Product Added, as well as their properties, will all be sent to your configured destinations, including Customer.io and Amplitude. Then you can define cohorts based on these events in Customer.io to add to email campaigns or conduct funnel analytics in Amplitude.
+
+Talk to a product specialist to learn what else you can accomplish with these tools.
+
+Define the cohort in Customer.io
+Now define the specific cohort in Customer.io as per our conditions listed earlier: someone who spends over $20 per order and shops over twice a month. In Customer.io, go to “Segments” and “Create Segment”:
+
+Screenshot of the Segment builder in Customer.io, with the title "Coupon Loyalty Experiment".
+
+After this cohort is created, then when a customer makes the third purchase in a month and it’s over $20, they will be added to this segment.
+
+Next, create a “segment trigger campaign”, where Customer.io will send a message the first time someone enters a segment. The segment in this case will be the one you just created: Coupon Loyalty Experiment.
+
+Screenshot of the Segment Trigger Campaign page in Customer.io, with a sample email ready to send to customers in the segment.
+
+Save the changes and enable the campaign. Then, make sure that your e-commerce backend is set up properly to handle the coupons. If it’s available in your system, create a coupon that only works for a specific set of customers.
+
+Measure performance
+After a month has passed for the split test, you can measure the performance of the email coupon program to see whether it’s making a material impact on conversions.
+
+In Amplitude, create a funnel that compares the two cohorts—one who received this coupon email vs. the control group who did not—and see its impact on conversions and revenue generated.
+
+First, define a behavioral cohort with the conditions of being loyal customers so you can use it when analyzing the conversion funnel:
+
+Screenshot of a Loyal Customers segment in Amplitude, comprised of users who spent at least $20 and purchased more than two times in the last 30 days
+
+You’ll also have to create a second identical cohort, except with the only difference that these customers did not receive the coupon email. You need this cohort to create the conversion funnel with the control group.
+
+Screenshot of a Loyal Customers (Control) segment in Amplitude, comprised of users who spent at least $20 and purchased more than two times in the last 30 days, but did not get the loyal customer email.
+
+After you’ve created these two cohorts, create two funnel charts. The first funnel will look at the control group. The second funnel will look at the group that received the coupon email.
+
+Screenshot of the Funnel Analysis page in Amplitude showing the Loyal Customers (Control) segment.
+
+Resulting in:
+
+A bar chart showing 233 visits to the main landing screen, 98 products added to cart, and 66 purchases.
+
+The control group that did not receive the email for the coupon resulted in 233 people visiting the store, with 66 conversions.
+
+The funnel for the group who did receive the emails can be created with these parameters:
+
+Screenshot of the Funnel Analysis page in Amplitude showing the Loyal Customers segment.
+
+Resulting in:
+
+A bar chart showing 758 emails delivered, 560 emails opened, 168 visits to the main landing screen, 134 products added to cart, and 95 purchases.
+
+The email itself drove 168 customers to the store, which also saw higher conversions to Product Added and ultimately Order Completed.
+
+Note that this funnel is only looking customers who went through these events in this specific order. This analysis doesn’t consider customers who are part of the emailed cohort, yet didn’t open the email, but still visited the site and/or made a purchase.
+
+At first glance, it appears that the group that was emailed did receive an absolute number of more conversions. However, these funnels are still inconclusive, given that you haven’t explored the impact on the top line revenue, as well as overall engagement with the brand. Fortunately, you can continue to use Amplitude to analyze impact on revenue itself.
+
+Find new ways and channels to retain your most valuable customers
+Retaining and rewarding your customers is paramount to a strong and engaging brand. This example is just one of millions that you can employ to find new ways to delight and excite your customer base.
+
+Other ideas can be to send messages to your customers with a referral code to invite their friends. Or set up a coupon for customers who are just shy of entering your most valuable customers cohort. Or, if you’re hosting a pop up shop event, sending a special and personalized invite to your strongest users first, as a way to thank them for their business.
+
+The possibilities are endless when you use your customer data to drive sales.
+
+Talk to a product specialist today about using data to tailor your brand experience.
+
+Forecasting LTV with SQL and Excel for E-Commerce
+Customer Lifetime Value (“LTV”) is the amount of money that an individual customer will spend with a given business in the future. It’s often used to value cohorts in your customer base, determine how much to spend in acquiring or retaining new users in a given cohort, rank customers, and measure the success of marketing activities from a baseline LTV forecast.
+
+The LTV calculation is not straightforward for e-commerce businesses, since future payments are not contractual: at any moment, a customer may never make a single purchase again. Additionally, forecasting future purchases requires statistical modeling that many current LTV formulas lack.
+
+This guide shows how to calculate forward-looking LTV for non-contractual businesses using SQL and Excel. This analytical approach allows you to accurately rank your highest value customers, as well as predict their future purchase sizes to help focus your marketing efforts.
+
+This guide assumes you’re using the tracking schema described in How to implement an e-commerce tracking plan and are storing data in a Segment Warehouse.
+
+Talk to a product specialist to learn how companies like Warby Parker and Crate & Barrel use a data warehouse to increase engagement and sales.
+
+Calculating LTV: Buy ‘Til You Die
+In a non-contractual setting, you can’t use a simple retention rate to determine when customers terminate their relationship. This is because the retention rate is a linear model that doesn’t accurately predict whether a customer has ended her relationship with the company or is merely in the midst of a long hiatus between transactions.
+
+The most accurate non-contractual LTV model, named “Buy Til You Die” (“BTYD”), focuses on calculating the discounted estimation of future purchases based on recency of last purchase, frequency of purchases, and average purchase value. This model uses non-linear modeling to predict whether or not a user is “alive” or “dead” given historic transactions to forecast future probability and size of purchases.
+
+Since LTV is a critical metric for e-commerce companies, it’s important that this model, instead of simpler linear formula that is based on retention rates, is used for it’s calculation.
+
+Use SQL to build the necessary table, which will be exported as a CSV and opened in Google Sheets. Then, use Solver to estimate the predictive model parameters, which ultimately calculates the future purchases of each customer. Finally, the LTV calculation is simply the net present value of each customer’s future purchases. Rank them by LTV, then find behavioral patterns across the top 10 or 50 customers to figure out how best to target or retain this cohort.
+
+Recency, frequency, and average size
+
+As a growth analyst at the fictitious on-demand artisanal toast company, Toastmates, it’s important to know which customers are worth more to the business than others. Most important, you should understand what similarities these customers all have to help guide the marketing team in their efforts.
+
+The first step in creating the BTYD model is to get historic purchasing data of at least a month. In your analysis, you can use data from the past six months. The data must include the columns userId (email is fine too), number of purchases within the specified time window, days since last purchase, and days since first purchase.
+
+Then, use this Google Sheet, which provides all of the complex calculations for estimating the model parameters, as well as forecasting the future sales of each customer. This sheet is View Only, so be sure to copy it entirely so you can use it.
+
+To retrieve a table with the right columns for analysis, use the follow SQL query:
+
+    with
+    first_transaction as (
+        select  u.email,
+                datediff('day', min(oc.received_at)::date, current_date) as first
+          from  toastmates.order_completed oc
+     left join  toastmates.users u
+            on  oc.user_id = u.email
+         where  oc.received_at > dateadd('month', -6, current_date)
+      group by  1
+    ),
+    frequency as (
+        select  u.email,
+                count(distinct oc.checkout_id) as frequency
+          from  toastmates.order_completed oc
+     left join  toastmates.users u
+            on  oc.user_id = u.email
+         where  oc.received_at > dateadd('month', -6, current_date)
+      group by  1
+    ),
+    last_transaction as (
+        select  u.email,
+                datediff('day', max(oc.received_at)::date, current_date) as last
+          from  toastmates.order_completed oc
+     left join  toastmates.users u
+            on  oc.user_id = u.email
+         where  oc.received_at > dateadd('month', -6, current_date)
+      group by  1
+    ), 
+    average_transaction_size as (
+        select  u.email,
+                avg(oc.total) as avg
+          from  toastmates.order_completed oc
+     left join  toastmates.users u
+            on  oc.user_id = u.email
+         where  oc.received_at > dateadd('month', -6, current_date)
+      group by  1
+      order by  2 desc
+    )
+        select  distinct 
+                u.email,
+                nvl(f.frequency, 0) as frequency,
+                nvl(z.last, 0) as days_since_last_transaction,
+                nvl(a.first, 0) as days_since_first_transaction,
+                t.avg as average_transaction_size
+          from  toastmates.users u
+     left join  first_transaction a
+            on  u.email = a.email
+     left join  frequency f
+            on  u.email = f.email
+     left join  last_transaction z
+            on  u.email = z.email
+     left join  average_transaction_size t
+            on  u.email = t.email
+      order by  2 desc
+This returns a table where each row is a unique user and the columns are email, number of purchases within the time window, number of discrete time units since last purchase, and average purchase order.
+
+Screenshot of a spreadsheet with columms email, frequency, days_since_last_transaction, days_since_first_transaction, and average_transaction_size.
+
+Here is a screenshot of the first twelve rows returned from the query in Mode Analytics.
+
+Export this data to a CSV, then copy and paste it in the first sheet of the Google Sheet where the blue type is in the below screenshot:
+
+Screenshot of the Segment Tracking Plan Google Spreadsheet, with 11 user records.
+
+Also be sure to add the total time in days in cell B6. This is important as the second sheet uses this time duration for calculating net present value of future payments.
+
+How to use the Google Spreadsheet
+After you paste in the CSV from the table into the first tab of the sheet, the next step is to estimate the model parameters (the variables on the top left of the sheet). In order to do this, we need to use a feature of Microsoft Excel called Solver.
+
+You can export your Google Sheet as an Excel document. Then, use Excel Solver to minimize the log-likelihood number in cell B5, while keeping the parameters from B1:B4 greater than 0.0001.
+
+Screenshot of the Solver Parameters popup in Google Sheets, with the cells B1:B4 set greater than or equal to 1 E to the -5.
+
+After Solver runs, cells B1:B4 will be updated to represent the model’s estimates. Now, you can hard code those back into the sheet on Google Sheets. The next sheet relies on these model estimates to calculate the expected purchases per customer.
+
+Model and predict future customer purchases
+The model requires four pieces of information about each customer’s past purchasing history: her “recency” (how many “time units” her last transaction occurred), “frequency” (how many transactions she made over the specified time period), the length of time over which we have observed her purchasing behavior, and the average transaction size.
+
+In the example, you have the purchasing behavior data over the course of six months with each unit of time being a single day.
+
+You can apply a both a beta-geometric and a negative binomial distribution (“BG/NBD”) to these inputs and then use Excel to estimate the model parameters (an alternative would be the Pareto/NBD model). These probability distributions are used because they accurately reflect the underlying assumptions of the aggregation of realistic individual buying behavior. (Learn more about these models).
+
+After estimating the model parameters, you can predict a particular customer’s conditional expected transactions by applying the same historic purchasing data to Bayes’ Theorem, which describes the probability of an event based on prior knowledge of conditions related to the event.
+
+Estimating the model parameters
+
+The top left part of the first sheet represent the parameters of the BG/NBD model that must be fitted to the historic data you paste in. These four parameters (r, alpha, a, and b) will have “starting values” of 1.0, since you’ll use Excel Solver to determine their actual values.
+
+The values in columns F to J represent variables in the BG/NBD model. Column F, in particular, defines a single customer’s contribution to a the overarching function, on which we’ll use Solver to determine the parameters. In statistics, this function is called the likelihood function, which is a function of the parameters of a statistical model.
+
+In this particular case, this function is the log-likelihood function, which is B5, as calculated as the sum of all cells in column F. Logarithmic functions are easier to work with, since they achieve its maximum value at the same points as the function itself. With Solver, find the maximum value of B5 given the parameters in B1:B4.
+
+With the new parameter estimates, you can now predict a customer’s future purchases.
+
+Predicting a customer’s future purchases
+
+In the next sheet, you can apply Bayes’ Theorem to the historic purchasing information to forecast the quantity of transactions in the next period. Multiply the expected quantity with the average transaction size to calculate the expected revenue for that period, which you can extrapolate as an annuity, of which you can find the present discounted value (assuming discount rate is 10%).
+
+Central to the Bayes’ Theorem formula is the Gaussian hypergeometric function, which is defined by “2F1” in column M. Evaluate the hypergeometric function as if it were a truncated series: by adding terms to the series until each term is small enough that it becomes trivial. In the spreadsheet, we sum the series to it’s 50th term.
+
+The rest of the variables in Bayes’ Theorem is in columns I through L, which use the inputs from the customer’s historic purchasing information, as well as the model parameter estimates as determined from Solver (cells B1:B4).
+
+The expected quantity of purchases in the next time period is calculated in column H.
+
+Finally, multiply that with the average transaction size and you can get the expected revenue for the next time period.
+
+Rank your customers
+This exercise allows you to rank your customers from most valuable to least by ordering column F in descending order. You can take the userId s of the top several customers and look across their shopping experiences to identify any patterns that they share, to understand what behaviors are leading indicators to becoming high value customers.
+
+Below is a simple query to get a table of a user’s actions in rows. Just replace the user_idwith the user in question.
+
+    with anonymous_ids as (
+        select  anonymous_id from toastmates.tracks
+         where  user_id = '46X8VF96G6'
+      group by  1
+    ),
+
+    page_views as (
+        select  *
+          from  toastmates.pages p
+         where  p.user_id = '46X8VF96G6'
+            or  anonymous_id in (select anonymous_id from anonymous_ids)
+      order by  p.received_at desc
+    ),
+
+    track_events as (
+        select  *
+          from  toastmates.tracks t
+         where  t.user_id = '46X8VF96G6'
+            or  anonymous_id in (select anonymous_id from anonymous_ids)
+      order by  t.received_at desc
+    )
+
+      select  url,
+              received_at
+        from  page_views
+      union  
+      select  event_text,
+              received_at
+        from  track_events
+    order by  received_at desc
+This above query for user whose user_id is "46X8VF96G6" returns the below table:
+
+A table with two columns: event_or_page_viewed and received_at.
+
+At Toastmates, most of the highest forward-looking expected LTV customers share one thing in common: averaging two orders per month with an average purchase size of $20.
+
+With that in mind, you can define a behavioral cohort in our email tool, Customer.io, as well as create a trigger workflow so we can send an email offer to these customers.
+
+Learn how to use email tools to target this cohort of high value customers.
+
+Reward your best customers
+This exercise is useful not only as a forward looking forecasting model for customer LTV, but also as a quality ranking system to see which customers are worth more to your business. Coupled with the ability to glance across the entire shopping experience of a given customer, you can identify broad patterns or specific actions that may be an early signal for a high value shopper. Recognizing these high value shoppers means being proactive in nurturing, rewarding, and retaining them.
+
+And this is just the beginning. Having a rich set of raw customer data allows you to create accurate projection models for LTV so you know not only how much you can spend to acquire them, but also how to rank your customers by value. Ultimately, these insights lead to the right actions that can build an engaging shopping experience and drive sales.
+
+Talk to a product specialist to learn how companies like Warby Parker and Crate & Barrel use a data warehouse to increase engagement and sales.
+
+Importing Historical Data
+When transitioning over to Segment, customers commonly want to import historical data into tools they are migrating to or evaluating.
+
+Note: Historical imports can only be done into destinations that can accept historical timestamped data. Most analytics tools like Mixpanel, Amplitude, or Kissmetrics can handle that type of data just fine. One common destination that doesn’t accept historical data is Google Analytics, since their API cannot accept historical data.
+
+Method 1: Using a Custom Solution
+General Instructions
+Use any server-side library, which sends requests in batches to improve performance. Once you have data to import, follow the steps below:
+
+Export or collect the data to be imported.
+
+Include timestamp data in your export if the data needs to appear in end tools in a historical reference. For instance, if you’re importing emails and it’s relevant to know when someone joined your email list, you may need to export the timestamp. If no timestamp is specified when importing, the data will show a timestamp from the time the data was received.
+
+Decide which destinations need to receive the data.
+
+By default, data coming into Segment will be forwarded to all destinations connected to a given source. To limit data to specific destinations, the integrations object must be modified. With historical data, you often only want to send the data to a specific destination or into your data warehouse. For example, in Node.js set the integrations object as follows.
+
+analytics.track({
+    event: 'Upgraded Membership',
+    userId: '97234974',
+    integrations: { 'All': false, 'Vero': true, 'Google Analytics': false }
+ })
+Once you’ve done that, you’ll need to write an application or worker to send the data to Segment.
+
+You will need to cycle through each set of data and map it to a Segment server-side library method or build an array matching the HTTP Import API format.
+
+Tip: Segment recommends using a Segment library for this process, as they set contextual message fields like message_id (used for deduping) and sent_at (used for correctly client clock skew) that Segment’s API uses to correct behavior upon ingestion.
+
+Tip: The server-side libraries will automatically batch requests to optimize for performance and prevent linear request volume. This batching behavior is modifiable, and some of the underlying libraries implement a configurable max queue size that may discard messages if you enqueue requests much faster than the client can flush them. We recommend overriding the max queue size parameter for the library to a high value you’re comfortable you can remain under in your batch job.
+
+Demo projects
+The following projects are open-source and do not have official Segment support. If you encounter issues, the best way to get help is by opening an issue on the project’s GitHub page. Feel free to clone the repository and adjust the code to suit your unique needs.
+
+One of Segment’s Success Engineers wrote an alpha prototype Node.js app for importing data utilizing the HTTP API, which we’ve included below:
+
+Example Node.js import application
+
+Additionally, one of Segment’s Software Engineers developed a React App with more out of the box functionality for importing events. The features include a modern UI, transformations, and event format checking prior to import:
+
+Desktop React CSV uploader
+
+MarketLytics has documented their experience using the alpha prototype importer and offer some helpful visuals and tips.
+
+Alternative solution
+If a server-side library doesn’t meet your needs, you can use the Segment bulk import HTTP API directly.
+
+Note: When you use the HTTP API to export historical data to upload to Segment, remove all the original sent_at, message_id, and project_id fields from the archived message before forwarding them back to Segment.
+
+Method 2: Using Reverse ETL
+Please refer to the Reverse ETL guide for more details.
+
+oining User Profiles
+One of the first questions we get when our customers start querying all of their data is, how do I join all this data together? For example, let’s say you’d like to know if support interactions in Zendesk increase revenue in Stripe, or which percentage of users opened your email campaign and visited your website or mobile app? The key to answering these advanced questions is tying your data together across these sources. To do that, you need a common user identifier.
+
+What is the user ID problem?
+Each SaaS tool you use has its own way of identifying users with a unique primary key. And, you will find each of these different IDs across different collections of tables in your database. So, when you want to start matching Joe Smith who entered a ticket in Zendesk and also clicked through a campaign in Mailchimp, it starts to get tricky.
+
+A graphic with a header (Production Database) and six tiles with the name of a source and the unique primary key that source assigns to a user.
+
+For example, Stripe keeps track of users with a customer_id, Segment requires auser_id, and Marketo uses email to uniquely identify each person.
+
+To effectively join across these sources, you need to understand how each id maps to each other. The best way to do this is to create a common identifier across tools.
+
+Use a common identifier when possible
+When you install a new tool (or use Segment to install all of them at once), you need to choose what you will put in the ID field. There are lots of different options for this: emails, twitter handles, usernames, and more.
+
+However, we suggest using the same ID you generate from your production database when you create a new user. Database IDs never change, so they are more reliable than emails and usernames that users can switch at their leisure. If you use this same database ID across as many tools as possible, it will be easier to join identities down the road. (In MongoDB, it would look something like this 507f191e810c19729de860ea.)
+
+analytics.identify('1e810c197e', { // that's the user ID from the database
+  name: 'Jane Kim',
+  email: 'jane.kim@example.com'// also includes email
+  });
+Though we wish you could use a database ID for everything, some tools force you to identify users with an email. Therefore, you should make sure to send email along to all of your other tools, so you can join on that trait as a fallback.
+
+For Segment Destination Users
+Integrating as many tools as possible through Segment will make your joins down the road a little easier. When you use Segment to identify users, we’ll send the same ID and traits out to all the destinations you turn on in our interface. (More about Segment destinations.
+
+A few of our destination partners accept an external ID, where they will insert the same Segment user ID. Then you can join tables in one swoop. For example, Zendesk saves the Segment User ID as external_id, making a Segment-Zendesk join look like this:
+
+SELECT zendesk.external_id, users.user_id
+FROM zendesk.tickets zendesk
+JOIN segment.usersusers
+ON zendesk.tickets.external_id = segment.user_id
+Here’s a look at the Segment destinations that store the Segment User ID:
+
+Tool	Corresponding Trait	Corresponding Sources Table
+Zendesk	external_id	zendesk.tickets.external_id
+Mailchimp	unique_email_id	mailchimp.lists.unique_email_id
+Intercom	user_id	intercom.users.user_id
+How to merge identities
+Whether you’re using Segment or not, we suggest creating a master user identities table that maps IDs for each of your sources.
+
+This table will cut down on the number of joins you have to do because some IDs may only exist in one out of many tables related to a source.
+
+Here’s sample query to create a master user identities table:
+
+CREATE TABLE user_identities AS (
+select
+segment.id as segment_id,
+segment.email as email,
+zendesk.id as zendesk_id,
+stripe.id as stripe_id,
+salesforce.id as salesforce_id,
+intercom.id as intercom_id
+
+from segment.users segment
+
+– Zendesk
+leftjoin zendesk.users zendesk on
+ ( zendesk.external_id = segment.id– if enabled through Segment
+or zendesk.email = segment.email ) – fallback if not enabled through Segment
+
+– Stripe
+left join stripe.customers stripe on
+ stripe.email = segment.email
+
+– Salesforce
+left join salesforce.leads salesforce on
+ salesforce.email = segment.email
+
+– Intercom
+left join intercom.users intercom on
+ ( intercom.user_id = segment.id– if enabled through Segment
+or intercom.email = segment.email ) – fallback if not enabled through Segment
+
+group by 1,2,3,4,5,6
+
+)
+You’ll spit out a user table that looks something like this:
+
+segment_id	email	zendesk_id	stripe_id	salesforce_id	intercom_id
+mYhgYcRBC7	ziggy@stardust.com	1303028105	cus_6ll4iGAO7X8u7L	00Q31000014XGRcEAO	55c8923f67b8d6524600037f
+mYhgYcRBC7	justin@biebs.com	1303028105	cus_6ll3xVVSLIZomI	00Q31000014XGRcEAO	55c8923f67b8d6524600037f
+7adt7XG27c	queen@beyonce.com	1472230319	cus_6u2ZcW3uC8VwZa	00Q31000014sKCqEAM	5626dfed2e028608710000ce
+QZnP7cViH1	kanye@kimye.com	1486907299	cus_6yrv9bwLgXN78s	00Q31000015G7kIEAS	55f6a142bd531ec6930005fa
+While creating this table in SQL is a good strategy, we’d be remiss not to point out a few drawbacks to this approach. First, you need to run this nightly or at some regular interval. And, if you have a large user base, it might take a while to run. That said, it’s probably still worth it.
+
+How to run a query with your joined data
+
+So what can you do once you have all of your ID’s mapped? Answer some pretty nifty questions that is. Here are just a few SQL examples addressing questions that incorporate more than one source of customer data.
+
+Segment + Zendesk
+
+-- Which referral source is sending us the most tickets?
+SELECTsegment.referral_source,
+COUNT(zendesk.ticket_id) AS count_of_tickets
+FROM zendesk.tickets zendesk
+LEFT JOIN segment.userssegment
+ONusers.segment_id = segment.user_id
+GROUP BY 1
+ORDER BY 2 desc
+Stripe + Zendesk
+
+-- How many tickets do we receive across each pricing tier?
+
+SELECT stripe.plan_name AS plan_name,
+COUNT(zendesk.ticket_id) AS count_of_tickets
+
+-- Start with Zendesk
+FROM zendesk.tickets zendesk
+
+-- Merge Users
+LEFT JOIN user_identities users
+ON zendesk.id = users.zendesk_id
+
+-- Add Stripe
+LEFT JOIN stripe.charges stripe
+ON users.stripe_id = stripe.customer_id
+
+-- Group by plan name, from most tickets to least
+GROUPBY1
+ORDERBY2desc
+Advanced Tips
+An alternative to the lookup user table in SQL would be writing a script to grab user IDs across your third-party tools and dump them into your database.
+
+You’d have to ping the APIs of each tool with something like an email, and ask them to return the key or id for the corresponding user in their tool.
+
+A sample script, to run on a nightly cron job, would look something like this:
+
+var request = require('superagent'); // https://www.npmjs.com/package/superagent
+
+var username = '<your-username>';
+var password = '<your-password>';
+var host = 'https://segment.zendesk.com/api/v2/';
+
+/**
+ * Gets the user object in Zendesk by email address.
+ *
+ * @param {String} email
+ * @param {Function} fn
+ */
+
+functiongetUserIds(email, fn) {
+ request
+ .get(host + 'users/search.json?query=' + email)
+ .auth(username, password)
+ .end(fn);
+}
+
+/**
+ * Get the first Zendesk user that matches 'kanye@kimye.com'
+ */
+
+getUserIds('kanye@kimye.com', function(err, res) {
+if (err) return err;
+// res.body.users will be an Array
+// res.body.users[0].id will return the `id` of the first user
+});
+Here is the documentation for Zendesk’s API for more information.
+
+Measuring Your Advertising Funnel
+It’s surprisingly hard to answer questions about the ROI of your ad campaigns. What does a click actually result in? How much should I pay for it? We built our Sources for Facebook Ads and Google Adwords to help you understand the true performance and cost of your campaigns.
+
+In this article, we dig into the nuances of data collection and potential gotchas around measuring clicks, pageviews, and ultimately, conversions.
+
+Measuring Campaign Performance
+Today, most marketing teams think about their paid acquisition funnel as three major steps…
+
+Bar chart with three bars: Ad Impressions, Ad Clicks, and Conversion Event.
+
+This makes sense when looking at overall campaign performance, but hides several crucial funnel steps that can make the difference between increasing a campaign’s spend and shutting it off due to poor results.
+
+Because page optimization and ad blockers can impact measurement of your funnel, it’s important to look at the four additional steps happening between the ad click and conversions.
+
+Bar chart with two headers: Ad Platform Servers, which covers Ad impressions and Ad Clicks, and Your Servers, which covers Page Request Initiated, First Javascript Loaded, Page Fully Rendered, Third-Party Scripts Loaded, and Conversion Event.
+
+Let’s go through each true funnel step in a little more detail.
+
+Impressions & Clicks: When a user views an ad, the ad platform increments the count of impressions for that ad. When an ad is clicked, the ad platform logs a click. This is all handled by the ad platform’s servers. Facebook and Google work hard to filter invalid and fraudulent traffic, whether that’s a mistaken click, a bot, or a competitor looking to drain your advertising budget. Any bad traffic is removed from both your reporting and your monthly bill.
+
+Page Request Initiated: After an ad is clicked, a user’s browser attempts to load your landing page. This request is the first contact your application has with the user, and the server responds with the content to render the landing page.
+
+First JavaScript Loaded: The user’s browser starts to download the landing page content, which includes the HTML, JavaScript, and CSS. The browser parses and renders this content, loading the JavaScript sequentially as it parses the page. By default, analytics.js uses the async tag, which means that the browser won’t block the page and will load analytics.js once everything else is ready. Analytics.js wants to get out of the way where possible so you can create the best experience for your customers.
+
+Page Fully Rendered: The page is fully rendered once all the html, css and scripts have been loaded on the page. This time can vary a lot based on the speed of the internet connection (how fast all the assets download) and the device itself (how fast the local computer can run all of the scripts).
+
+Third-Party Scripts Loaded: Finally, third-party scripts are asynchronously loaded onto the page. The speed at which these scripts are loaded depends on a variety of factors, like the page size, network speed, and the size and number of the third-party scripts. Once these scripts are loaded, analytics.js triggers a page call to our API.
+
+Conversion Event: From there, a user might fill out a form, signup, or buy your product!
+
+How does this impact my ad reporting?
+There are three less-obvious contributors to fall-off across the paid acquisition funnel: slow loads, ad blockers, and bounces.
+
+For the sake of illustration, this means that if you have 100 ad clicks, you will be able to count most but not all corresponding page views because some visitors may bounce (exit or hit the back button) before analytics.js is executed. Similarly, you may miss some attributable conversions due to slow load times (your page calls can’t fire in time) and ad blockers (which often block analytics not just ads).
+
+Bar chart with three bars: Ad Clicks, Pageviews, and Conversions. Pageviews and Conversions have three segments: a segment with a number value, indicating the successfully recorded events, one segment with a value of ?, indicating events lost to Ad blockers, and one segment with a value of ?, indicating events lost to Bounces.
+
+Here’s how it works.
+
+Slow Loads
+
+Slow loads can impact your attribution modeling, making campaigns appear to have worse performance than reality. In the general case, when a user hits your landing page, your tracking code loads and triggers a pageview event that you can use to attribute that user to a campaign.
+
+But if third-party scripts take on the order of seconds to load (for example, on 1x or 3G networks), users may click off the page before your tracking code executes. In this case, the pageview never gets recorded and your ability to attribute that click to a conversion is lost.
+
+This is generally not an issue for most companies because they are focused more on people who spend a good deal of time on their pages. However, it is a potential source of opaqueness, particularly for users with slow or bad network connection.
+
+Bounces
+
+Bounces can occur at any stage of the funnel between an ad being clicked and third-party scripts loading on the page.
+
+Some bounces are not tracked because the user doesn’t even last the few seconds to request your HTML, render it, and execute tracking. If they quickly hit back or close the browser window, your ad platform will report clicks that don’t show up in your analytics tracking.
+
+Ad blockers
+
+It is likely the case that some percentage of your users are using ad blockers. It’s estimated that 22% of mobile smartphones worldwide and 16% of US web traffic use ad blockers. Segment customers have reported ad blockers for as little as a few percentage points of their visitors, to upwards of 70% of traffic for companies with very tech-forward audiences.
+
+But just because a user is using ad blockers doesn’t mean that they aren’t seeing and clicking on ads. Facebook recently announced that they would be suppressing ad blockers, and Adblock Plus, the most popular ad blocking and anti-tracking software, categorizes Google Search ads as acceptable ads.
+
+That said, many ad blockers do block analytics tools like Google Analytics, Mixpanel and Segment. This means that there exists some percentage of your conversions that actually came through your paid acquisition channels, but are unattributable due to ad blockers.
+
+What if I need more precise tracking?
+Segment offers two ways of joining your user clickstream data to your paid acquisition channels: standard client-side tracking or advanced server-side page calls.
+
+Bar chart with two headers: Ad Platform Servers, which covers Ad impressions and Ad Clicks, and Your Servers, which covers Page Request Initiated, First Javascript Loaded, Page Fully Rendered, Third-Party Scripts Loaded, and Conversion Event. The Page Request Initiated bar has a note, Serverside Page Call, and the Third-Party Scripts Loaded bar has a note, Recommended Client-Side Tracking.
+
+Both options come with their own tradeoffs that are important to consider for your use case.
+
+Client-side Tracking (Standard)
+
+Analytics.js is loaded with the async tag by default, which means that the library and all it’s destinations are loaded near the end of the page rendering. The benefit is that analytics.js doesn’t slow down page loads, but it does mean that tracking is not executed immediately on page load.
+
+When you use standard client-side tracking, you’ll lose pageview data for visitors who bounce or click off the page before analytics.js executes, and for visitors with ad blockers enabled.
+
+Server-side Page Calls (Advanced)
+
+If you want to capture adblock, bounce, and slow load traffic, we recommend adding an additional page() call to the server-side. This allows you avoid the browser altogether and see the total number of requests emanating from your paid acquisition channels. You’ll get visibility on an extra step in that funnel.
+
+The general approach is to use an arbitrary anonymousId (e.g. a UUID) in the server-side page() call and then also set the anonymousId as the ajs_anonymous_id cookie in the browser. You can read more about how to implement that here. This approach is tricky to implement, so we recommend that this is undertaken only for use cases in which bounce and/or adblock data is critical.
+
+Estimating the Impact of Moving Server-side
+If you want to get a quick estimate for the number of additional clicks you’d track using server-side tracking, you can use “redirect tracking” with a URL shortener to estimate the number of clicks coming from Google Adwords or Facebook Ads. This will give you an estimate for the number of times an ad is clicked (minus some bounce in the few hundred milliseconds of the redirect), which will closely match server-side page() tracking should you choose to implement it.
+
+Bar chart with two headers: Ad Platform Servers, which covers Ad impressions and Ad Clicks, and Your Servers, which covers Page Request Initiated, First Javascript Loaded, Page Fully Rendered, Third-Party Scripts Loaded, and Conversion Event. A line between the Ad Clicks and Page Request Initiated reads Bitly redirect.
+
+Here’s how it works…
+
+Use a URL shortener like bit.ly to link to a landing page, with a custom parameter like ?ttg=2 .
+
+Add the shortened link to your ad.
+
+Measure total clicks from the bit.ly stats page.Screenshot of the bit.ly stats page, with a bar chart showing spikes in clicks at 3am.
+
+In your warehouse, count the number of pages with that unique url parameter from step 1 (make sure you’re looking at the same timeframe).
+
+select received_at, url
+from <site>.pages
+where url like '%/warehouses%'
+and search like '%ttg=2'
+order by received_at
+We hope this overview helps explain the technical nuances of measuring what happens when a customer finds you using an ad! If you have any other questions, feel free to share them in the Segment Community for discussion.
+
+Measuring the ROI of Your Marketing Campaigns
+The purpose of marketing campaigns is to drive traffic (and sales). But how do you know which campaigns yield the most conversions or what channel across the campaigns was most effective?
+
+This guide provides you with the tools to answer these questions with SQL so that your marketing team can reproduce the hit campaigns and consistently generate loyal customers.
+
+Talk to a product specialist to learn how companies like Warby Parker and Crate & Barrel use a data warehouse to increase engagement and sales.
+
+Analyze campaign performance
+The goal of marketing campaigns is to drive engagement and conversions. Most commonly performed by attracting traffic to the site, these campaigns use UTM parameters for attribution. In our analysis, we’ll be heavily relying on UTM parameters to analyze not only campaign, but also channel performance.
+
+Learn how to effectively use UTM parameters in your marketing campaign strategies.
+
+For our analysis walkthrough, we’ll use fictitious e-commerce and marketing data from on-demand artisanal toast company, Toastmates.
+
+Toastmates is currently running these two campaigns:
+
+“National Toast Day”, where $5 off was applied if you made a purchase on that day
+“A Toast To Your Friend”, where you can buy toast for a friend at $5 off
+Each of these campaigns used a combination of channels. Here is a table with the channels and corresponding UTM parameters so when we build the SQL query, we can make sure all of the traffic sources are accounted for.
+
+Screenshot of two tables, one for the National Toast Day campaign and one for the A Toast to Your Friend campaign. Each table has columns for utm_campaign, utm_medium, and utm_source.
+
+We’ll use SQL below to measure the performance of each campaign and what that means for future marketing activities.
+
+Build the funnel
+The following query creates a table where each row is a customer and the columns are the date time when a key funnel event happens that have the context_campaign_name to match that of the UTM_campaign . The key funnel events in this analysis are Store Visited(based on a page view to the store URL), Product Viewed , and Order Completed . Given that each channel may have some key top of the funnel action that is unique to itself, let’s save that analysis for when we’re analyzing across channels.
+
+Feel free to copy and paste the below query for your analysis so long as you replace national-toast-day with your own UTM campaign parameter.
+
+    with
+
+    users as (
+        select  *
+          from  toastmates.users
+    ),
+
+    page_viewed as (
+        select  p.received_at as page_viewed_at,
+                p.context_campaign_name,
+                p.user_id
+          from  toastmates.pages p
+     left join  users u
+            on  u.id = p.user_id
+         where  p.context_campaign_name is not null
+           and  p.url ilike '%toastmates.com/store%'
+    ),
+
+    product_viewed as (
+        select  v.received_at as product_viewed_at,
+                v.context_campaign_name,
+                v.user_id
+          from  toastmates.product_viewed v
+     left join  users u
+            on  u.id = v.user_id
+    ),
+
+    order_completed as (
+        select  c.received_at as order_completed_at,
+                c.context_campaign_name,
+                c.user_id
+          from  toastmates.order_completed c
+     left join  users u
+            on  u.id = c.user_id
+    )
+
+        select  p.user_id as user_id,
+                page_viewed_at,
+                product_viewed_at,
+                order_completed_at,
+                p.context_campaign_name
+          from  page_viewed p
+     left join  product_viewed v
+            on  p.user_id = v.user_id
+     left join  order_completed c
+            on  p.user_id = l.user_id
+      order by  5 desc
+Here are the first four rows of the resulting table:
+
+Screenshot of a table, with columns for user_id, store_visited, product_viewed, order_completed, and campaign. Four customer records are included.
+
+Then, we can use tweak the query above into the one below to perform some simple COUNT and SUM on the previous table to get conversion metrics as well as total revenue derived from the campaign.
+
+    with
+
+    users as (
+        select  *
+          from  toastmates.users
+    ),
+
+    page_viewed as (
+        select  p.received_at as page_viewed_at,
+                p.context_campaign_name,
+                p.user_id
+          from  toastmates.pages p
+     left join  users u
+            on  u.id = p.user_id
+         where  p.context_campaign_name is not null
+           and  p.url ilike '%toastmates.com/store%'
+    ),
+
+    product_viewed as (
+        select  v.received_at as product_viewed_at,
+                v.context_campaign_name,
+                v.user_id
+          from  toastmates.product_viewed v
+     left join  users u
+            on  u.id = v.user_id
+    ),
+
+    order_completed as (
+        select  c.received_at as order_completed_at,
+                c.context_campaign_name,
+                c.total,
+                c.user_id
+          from  toastmates.order_completed c
+     left join  users u
+            on  u.id = c.user_id
+    )
+
+        select  p.context_campaign_name,
+                count(page_viewed_at) as store_visits,
+                count(product_viewed_at) as product_views,
+                count(order_completed_at) as orders_completed,
+                sum(total) as total_revenue
+          from  page_viewed p
+     left join  product_viewed v
+            on  p.user_id = v.user_id
+     left join  order_completed c
+            on  p.user_id = l.user_id
+      group by  5
+      order by  5 desc
+Here is the resulting table:
+
+A table with campaign, store_visits, product_views, orders_completed, and total_revenue columns.
+
+This analysis not only gives us a great snapshot of the conversion points along each campaign’s funnel, but also shows that we’ve generated $3,100.37 from the National Toast Day campaign and $3,824.68 from the Toast Your Friend campaign. Also we can see that the quality of the traffic from the National Toast Day is higher, but we’ve had more total traffic from Toast Your Friend, which makes sense since it’s an ongoing campaign.
+
+But this is not yet ROI, since we haven’t incorporated the spend—the labor of your marketing team and the paid acquisition channels to source part of this traffic—that went into these channels.
+
+Add campaign costs
+
+The main costs that are incorporated in an ROI calculation are salaries (pro-rated by person-hour) and media spend. While we could conceivably create a custom, static table in SQL that contains the spend information over time, the faster and more practical way would be a back of the envelope calculation.
+
+The costs associated with a given campaign consist of two major pieces: the person-hour cost and any associated media spend.
+
+Calculating the pro-rated person-hour is an estimate of the number of hours and people used to set up and manage the campaign, then multiplied by the hourly rates based off their annual salaries.
+
+The media spend is the advertising cost for distributing creatives to generate traffic to your store
+
+Want to easily export advertising data from Google Adwords or Facebook Ads? Check out Segment Sources.
+
+When we have the aggregate cost numbers, the formula for ROI is:
+
+Campaign ROI = (Profit Attributed to Campaign – Campaign Cost) / Campaign Cost
+Here is a spreadsheet to illustrate the ROI calculation for both campaigns:
+
+Spreadsheet with campaign, type of cost, cost, revenue, and ROI information for both campaigns. The toast-your-friend campaign has a ROI of 27.49%, while the national-toast-day has a ROI of 24.01%.
+
+Though ROI numbers are one success metric, it’s an important benchmark for comparing performance when launching new campaigns or comparing against past campaigns.
+
+But how can we go one step further and see what worked and what didn’t? One approach is to see which channels convert better, so you know how to adjust your marketing spend or media buys in your current campaigns or future ones.
+
+Analyze channel performance
+A single campaign can include a wide variety of channels: email, display ads, push notifications, forums, etc. all of which yields different engagement and conversion rates. Effective marketers will keep a pulse on each channel throughout the duration of the campaign to understand whether a target audience is being saturated, a creative refresh is needed (for advertising), or how to efficiently allocate future spend towards a source that converts.
+
+The analysis is similar to measuring the performance across a single campaign, with the only change being finding events where we focus on context_campaign_medium or context_campaign_source instead of context_campaign_name . The SQL below measures the conversion rates at key funnel events for national-toast-day , but broken down by utm_medium .
+
+You can copy the below into your favorite editor, as long as you change out the context_campaign_name and context_campaign_medium parameters to ones that applies to your business.
+
+    with
+
+    users as (
+        select  *
+          from  toastmates.users
+    ),
+
+    page_viewed as (
+        select  p.received_at as page_viewed_at,
+                p.context_campaign_name,
+                p.user_id
+          from  site.pages p
+     left join  users u
+            on  u.id = p.user_id
+         where  p.context_campaign_name = 'national-toast-day'
+           and  p.context_campaign_medium is not null
+           and  p.url ilike '%toastmates.com/store%'
+    ),
+
+    product_viewed as (
+        select  v.received_at as product_viewed_at,
+                v.context_campaign_medium,
+                v.user_id
+          from  toastmates.product_viewed v
+     left join  users u
+            on  u.id = v.user_id
+    ),
+
+    order_completed as (
+        select  c.received_at as order_completed_at,
+                c.context_campaign_medium,
+                c.user_id,
+                c.total
+          from  toastmates.order_completed c
+     left join  users u
+            on  u.id = c.user_id
+    )
+
+        select  p.context_campaign_medium as utm_medium,
+                count(page_viewed_at) as store_visits,
+                count(product_viewed_at) as product_views,
+                count(order_completed_at) as orders_completed,
+                sum(c.total) as total_revenue
+          from  page_viewed p
+     left join  product_viewed_at v
+            on  p.user_id = c.user_id
+     left join  order_completed c
+            on  p.user_id = c.user_id
+      group by  1
+      order by  1 desc
+The resulting table:
+
+Table with utm_medium, store_visits, product_views, orders_completed, and total_revenue columns. The different types of utm_mediums are paid-social, organic-social, display, news, and email.
+
+Since the National Toast Day campaign is relatively new, the majority of the traffic is from the email and an article (“news”). But we can see that the social channels have a lower conversion from store visits to product views. Email has the best overall conversion to revenue, which may be attributed to the recipients already familiar with the Toastmates brand or having previously had a stellar end-to-end shopping experience.
+
+We can further breakdown this analysis by seeing which email, display ads, and social channels performed the best, by adding utm_source and utm_content ,assuming that you’ve properly added them in your earned and paid media links. Also note that this preliminary analysis in SQL doesn’t account for double-counted users, who had impressions with our brand on multiple channels (e.g. someone seeing a display ad, yet converted on the email outreach). Fortunately, there are multi-touch attribution models that can be applied to better understand the weights of each activity towards conversion.
+
+Learn more about multi-touch attribution models.
+
+Build repeatable hit marketing campaigns
+Measuring the ROI and performance of marketing campaigns and marketing channels tells a compelling story about what types of campaigns resonate with your audience. How does your audience like to be engaged? Text, push notifications, email? What campaign messaging hooks work the best in getting them back at your store?
+
+You can apply this analytical approach and performance measurement techniques to a wide variety of marketing activities, such as offline marketing, billboards, or sponsoring events. These insights can empower your team to focus on what works and eliminate what doesn’t.
+
+Talk to a product specialist to learn how companies like Warby Parker and Crate & Barrel use a data warehouse to increase engagement and sales.
+
+Migrating Code From Other Analytics Tools
+Switching from your current client-side JavaScript event tracking to Segment is easy. Below you can find migration guides for the following tools:
+
+Google Analytics
+Mixpanel
+If you’d like us to add more tools or mobile/server-side examples to this guide let us know!
+
+Google Analytics
+Custom Events
+Google Analytics Custom Events are simple to record in Segment. You’ll record them with our track method and use the same properties you would when sending to Google Analytics directly.
+
+The only mapping exception is the Event Action. That will automatically be populated by the Event Name you include in the track call.
+
+Here’s an example:
+
+ga('send', {
+  'hitType': 'event',
+  'eventCategory': 'Account',
+  'eventAction': 'Signed Up',
+  'eventLabel': 'Premium',
+  'eventValue': 4
+});
+Becomes:
+
+analytics.track('Signed Up', {
+  category: 'Account',
+  label: 'Premium',
+  value: 4
+});
+Since Event Category is required we’ll populate it with All if you don’t specify one. You can read more about this in our Google Analytics docs.
+
+Ecommerce
+Segment has full support for the Google Analytics E-Commere API and the Enhanced E-Commerce API as well. Make sure you follow our e-commerce tracking plan to make sure you’ll be able to use all e-commerce features in the tools we support.
+
+For an e-commerce transaction to appear in Google Analytics you’ll need to enable e-commerce for your Google Analytics view and send an Order Completed event to Segment. This simplifies things a lot compared to the direct Google Analytics code.
+
+Here’s an example:
+
+ga('require', 'ecommerce');
+
+ga('ecommerce:addTransaction', {
+'id': '93745',
+'revenue': '30',
+'shipping': '3',
+'tax': '2',
+'currency': USD
+});
+
+ga('ecommerce:addItem', {
+'id': '23423',
+'name': 'Monopoly: 3rd Edition',
+'sku': 'J90-32',
+'category': 'Games',
+'price': '19.00',
+'quantity': '1'
+});
+
+ga('ecommerce:addItem', {
+'id': '22744',
+'name': 'Uno Card Game',
+'sku': 'Q93-32',
+'category': 'Cards',
+'price': '3.00',
+'quantity': '2'
+});
+
+ga('ecommerce:send');
+Becomes:
+
+analytics.track('Order Completed', {
+  order_id: '93745',
+  total: 46,
+  shipping: 3,
+  tax: 2,
+  currency: USD,
+  products: [{
+    id: '23423',
+    name: 'Monopoly: 3rd Edition',
+    sku: 'J90-32',
+    category: 'Games',
+    price: 19,
+    quantity: 1
+  }, {
+    id: '22744',
+    name: 'Uno Card Game',
+    sku: 'Q93-32',
+    category: 'Cards',
+    price: 3,
+    quantity: 2
+  }]
+})
+At the very minimum you must include an orderId for each Order and for each product inside that order you must include an id and name. All other properties are optional.
+
+Custom Dimensions
+Through Segment you can record user-scope custom dimensions using our identify, page, or track methods.
+
+A full explanation can be found in our Google Analytics docs page, but here’s a quick example:
+
+ga('set', 'dimension5', 'Male');
+ga('send', 'pageview');
+Becomes:
+
+analytics.identify({
+  gender: 'Male'
+});
+analytics.page();
+(This example assumes you have already mapped Gender to the correct dimension in your Segment source settings for Google Analytics.)
+
+Everything Else
+To see a full list of Google Analytics features and how they work through Segment read our Google Analytics docs page.
+
+Mixpanel
+Event Tracking
+Event tracking is Mixpanel’s bread and butter. Below are all the relevant Mixpanel functions and how you can map them to Segment functions.
+
+Switching your event tracking from Mixpanel to Segment couldn’t be easier. Our trackmethod maps directly to Mixpanel’s. The event name is the first argument and the event properties are the second argument.
+
+mixpanel.track('Registered',{
+  type: 'Referral'
+});
+Becomes:
+
+analytics.track('Registered', {
+  type: 'Referral'
+});
+The identify method in Mixpanel is used to merge together events from multiple environments so your unique events number is accurate and your funnels don’t break.
+
+Since mixpanel.identify only takes a single argument (a userID) it maps directly to our identify method:
+
+mixpanel.identify('123');
+Becomes:
+
+analytics.identify('123');
+Mixpanel has the idea of Super Properties, which are user traits that get attached to every event that the user does. In Segment you can set Mixpanel Super Properties using our identify method. Super properties are only supported in client-side libraries Analytics.js, iOS, Android.
+
+Here’s an example:
+
+mixpanel.register({
+  "gender": "male",
+  "hairColor": "brown"
+});
+Becomes:
+
+analytics.identify({
+  gender: 'male',
+  hairColor: 'brown'
+});
+This also works when you include a userId argument in your identify call.
+
+Alias
+Alias is necessary in Mixpanel to tie together an anonymous visitor with an identified one. The Mixpanel and Segment alias methods both work the same.
+
+In client-side javascript passing a single argument will alias the current anonymous or identified visitor distinct_id to the userId you pass into it:
+
+mixpanel.alias('1234');
+Becomes:
+
+analytics.alias('1234');
+Track Links
+If you are tracking links with Mixpanel’s track_links helper you can switch that code to the Segment trackLink helper function in Analytics.js.
+
+And here’s an example:
+
+// track click for link id #nav
+mixpanel.track_links("#free-trial-link", "Clicked Free-Trial Link", {
+  plan: 'Enterprise'
+})
+Becomes:
+
+var link = document.getElementById('free-trial-link');
+analytics.trackLink(link, 'Clicked Free-Trial Link', {
+  plan: 'Enterprise'
+});
+Track Forms
+If you are tracking forms with Mixpanel’s track_forms helper you can switch that code tothe Segment trackForm helper function in Analytics.js.
+
+And here’s an example:
+
+// track submission for form id "register"
+mixpanel.track_forms("#register", "Created Account",
+  plan: 'Premium'
+});
+Becomes:
+
+var form = document.getElementById('register');
+analytics.trackForm(form, 'Created Account',
+  plan: 'Premium'
+});
+People Tracking
+Mixpanel people tracking is a separate database from the event tracking outlined above. For that reason there are separate API methods to record data to Mixpanel People.
+
+This method sets people properties in Mixpanel People. In Segment you will use ouridentify method to accomplish this.
+
+Here’s an example:
+
+mixpanel.people.set({
+  "$email": "jake.peterson@example.com",
+  "$name": "Jake Peterson"
+});
+Becomes:
+
+analytics.identify({
+  email: 'jake.peterson@example.com',
+  name: 'Jake Peterson'
+});
+This also works when you include a userId argument in your identify call.
+
+As you can see Segment also recognizes special traits like email and name and translates them to the keys that Mixpanel expects (we automatically add the dollar sign).
+
+For more information check out our Mixpanel docs.
+
+Increment
+To use Mixpanel increment through Segment you won’t event need anything in your code! All you have to do is list the events you’d like to increment automatically in your Mixpanel destination settings.
+
+Read more in our Mixpanel Increment Docs.
+
+Revenue
+Mixpanel’s Revenue report requires the use of a special function called track_charge. In Segment that special function becomes a simple track call. By using the event name Order Completed we’ll also use that event for any tools you use that recognize our ecommerce spec.
+
+mixpanel.people.track_charge(30.50,
+  'orderId': 'F9274'
+});
+Becomes:
+
+analytics.track('Order Completed',
+  revenue: 30.50,
+  orderId: 'F9274'
+});
+Segment's Role in Attribution
+At a higher level, attribution tools allow you to connect a specific campaign to user acquisition, giving you more visibility into campaign performance.  See the destination catalog for a list of attribution tools that Segment supports. 
+
+There are three stages of mobile attribution as it relates to Segment. 
+
+Customer installs your app
+
+The install is attributed by an attribution provider (Adjust, AppsFlyer, etc)
+
+Attribution information is sent back to Segment
+
+Here is a bit more information on what is happening at each of those stages. 
+
+Customer installs your app
+When lifecycle events are enabled, the Application Installed and Application Opened events are triggered on the first app open after the app is installed.  Note, if the app is deleted and then later reinstalled on the device, these events will be triggered again on first app open. 
+
+Situations where install counts look lower in Segment than in other tools. 
+
+Some tools, like iTunes or Google Play, count install on download rather than on app open like Segment.  iTunes and Google Play is able to easily collect data on download but not as easily able to collect first-party data on app open. Whereas other tools, such as Segment, need their SDK to be loaded in app and initialized on app open before they are able to collect the install information. For example, if a user downloads your app but does not open it, the install will be counted in iTunes/Google Play but not counted in Segment or other tools.
+
+Situations where install counts look higher in Segment than in other tools
+
+Many tools deduplicate install data. Some tools only allow one install event per lifetime of deviceId. Others deduplicate by deviceId accepting only one install per UTC day.  Each and every tool is different.  
+
+Segment, on the other hand, does not deduplicate.  We don’t believe our role in your data pipeline should be deduping particular events.  In fact, there may be situations where you may want to account for multiple Application Installed events such as: user sells their phone, user uninstalls and later decides to reinstall, etc. It is better to think about the Application Installed data in your Segment warehouse as the raw source of data, giving you flexibility to query 
+
+For more information on how installs are counted in different tools, here are a few resources from our partners: 
+
+Adjust - Discrepancies and Why Data Does not Always Match Up
+
+The install is attributed by an attribution provider
+Device-Mode Connection
+When you enable an attribution destination in device-mode, our integration code will also load that tool’s SDK. Upon app launch, the destination’s SDK will send install information which is then use to attribute that install to a campaign on their backend.  Segment loads the destination’s SDK, but attribution happens outside of Segment. 
+
+Cloud-Mode Connection
+Destination receives the Application Installed event and attributes the installation on their backend. 
+
+Attribution information is sent back to Segment
+Device-Mode Connection
+For tools that support this, if you have enabled “Track Attribution Data” in your Segment dashboard, our integration listens to the attribution tool’s SDK for a change in attribution state. Note: Not all device-mode attribution tools offer “Track Attribution Data” functionality.  See the settings section for a particular tool in your Segment dashboard for confirmation. 
+
+When there is a change in attribution state, the integration code triggers an Install Attributed call to be sent back to your Segment source (and on to all other enabled destinations - in device and cloud-mode).  
+
+Here is an example of how that call is triggered in the AppsFlyer integration code. This is the similar for other attribution providers such as Adjust. 
+
+Cloud-Mode Connection
+For tools that support server-side postback, after install is attributed, an Install Attributed event is triggered and sent server-side to your Segment source and forwarded on to all enabled cloud-mode destinations. 
+
+Example Install Attributed event: 
+
+analytics.track('Install Attributed', {
+  provider: 'Tune/Adjust/AppsFlyer',
+  campaign: {
+    source: 'Network/FB/AdWords/MoPub/Source',
+    name: 'Campaign Name',
+    content: 'Organic Content Title',
+    ad_creative: 'Red Hello World Ad',
+    ad_group: 'Red Ones'
+  }
+});
+For more detailed information on a particular attribution destination and functionality, see our Destinations docs.
+
+How do we set up event-triggered notifications or alerts?
+Below you’ll find a bunch of ways to set up notifications for yourself based on the data you’re sending through Segment. 
+
+Connections Alerting
+Connections Alerting allows Segment users to receive in-app, email, and Slack notifications related to the performance and throughput of an event-streaming connection.
+
+Connections Alerting allows you to create two different alerts:
+
+Source volume alerts: These alerts notify you if your source ingests an abnormally small or large amount of data. For example, if you set a change percentage of 4%, you would be notified when your source ingests less than 96% or more than 104% of the typical event volume.
+Successful delivery rate alerts: These alerts notify you if your destination’s successful delivery rate falls outside of a percentage that you set. For example, if you set a percentage of 99%, you would be notified if you destination had a successful delivery rate of 98% or below.
+For more information about Connections Alerting, see the Connections Alerting documentation.
+
+Google Analytics custom alerts
+You can use Google Analytics Custom Alerts to send yourself emails whenever a specific traffic segment drops below (or above) a threshold you set. 
+
+Learn how to set up email alerts in Google’s documentation.
+
+Analytics email summaries
+With tools like Amplitude, Kissmetrics, and Mixpanel, you can set up email reports delivered to you on a daily basis. They are completely customizable, so you can keep an eye on as many events or other metrics you’d like. 
+
+Mixpanel email reports
+Amplitude email alerts
+Realtime traffic monitoring
+Chartbeat and GoSquared both offer awesome real-time dashboards to see what’s happening right now on your site. They both include the option to get notified when your traffic hits a certain threshold. For example, if your on-site visitors is less than 100 people, or more than 1,000.
+
+Chartbeat Spike Alerts
+GoSquared Traffic Spike Alerts
+GoSquared also offers in-depth historical and user analysis. Chartbeat sticks to realtime anonymous traffic, but offers some sweet features for publishers.
+
+Webhook-based alerts
+The last option Segment recommends is to use a monitoring tool like PagerDuty or Datadog and point Segment’s webhooks destination at them. That way you can set up custom alerts in their system.
+
+Event-triggered emails
+The last option for alerting based off of Segment events is to use one of the email tools available on the Segment platform that offers event-triggered emails. Your options there are Customer.io, Vero, Autopilot, Outbound, Klaviyo, or Threads.
