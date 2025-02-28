@@ -147,24 +147,8 @@ http://127.0.0.1:8000/query?question=How do I create a user profile in mParticle
 ---
 
 ## 🎯 Future Improvements
-🚀 **Add OpenAI GPT Model** for more natural responses.  
-📖 **Improve Web Scraper** to handle dynamically loaded pages better.  
-📊 **Add Analytics Dashboard** to track query trends.  
-💬 **Improve UI with TailwindCSS** for a more modern design.  
+🚀 **Adding OpenAI GPT Model** for more natural responses.  
+📖 **Improving Web Scraper** to handle dynamically loaded pages better.  
+📊 **Adding Analytics Dashboard** to track query trends.   
 
 ---
-
-## 📜 License
-This project is **open-source** and free to use.  
-📩 **Want to contribute?** Feel free to open a pull request! 🚀  
-
----
-
-### 📌 Now You're Ready to Submit!  
-✅ **Upload to GitHub:**  
-```bash
-git add .
-git commit -m "Initial commit - CDP Chatbot"
-git push origin main
-```
-✅ **Evaluator can now easily clone, install, and run the chatbot!** 🎯  
